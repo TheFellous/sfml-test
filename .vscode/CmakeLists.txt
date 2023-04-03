@@ -1,0 +1,9 @@
+cmake_minimum_required(VERSION 3.0)
+project(MyProject)
+
+set(SOURCE_FILES main.cpp)
+
+find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
+
+add_executable(MyProject ${SOURCE_FILES})
+target_link_libraries(MyProject sfml-graphics sfml-audio)
