@@ -12,20 +12,20 @@ Game::~Game()
     delete this->win; 
 }
 
-void Game::update()
-{
-    this->pollEvents(); 
-}
-
 void Game::render()
 {
     // clear old frame, render objects, display frame in window
     this->win->clear(sf::Color::Black); 
     
     // Draw game objects
-    this->win->draw(this->enemy);   
+    // this->win->draw(this->enemy);   
+    this->renderEnemies(); 
 
     this->win->display(); 
+}
+void Game::renderEnemies()
+{
+
 }
 void Game::initVar()
 {
@@ -41,7 +41,9 @@ void Game::initWin()
 }
 void Game::initEnemies()
 {
+    this->enemy.setPosition(20.f, 20.f); 
     this->enemy.setSize(sf::Vector2f(100.f, 100.f)); 
+    this->enemy.setScale(sf::Vector2f(0.5f, 0.5f)); 
     this->enemy.setFillColor(sf::Color::Cyan); 
     this->enemy.setOutlineColor(sf::Color::Green); 
     this->enemy.setOutlineThickness(1.f); 
@@ -62,6 +64,26 @@ void Game::pollEvents()
         }
     }  
 }
+
+void Game::update()
+{
+    this->pollEvents(); 
+    this->updateMousePos(); 
+    this->updateEnemies(); 
+}
+void Game::updateMousePos()
+{
+    this->mouseposwin = sf::Mouse::getPosition(*this->win); 
+}
+void Game::updateEnemies()
+{
+    
+}
+void Game::spawnEnemy()
+{
+
+}
+
 // FUNCTIONS
 
 
