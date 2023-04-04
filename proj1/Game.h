@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <ctime>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -23,6 +24,7 @@ private:
 
     // Mouse position: 
     sf::Vector2i mouseposwin; 
+    sf::Vector2f mousePosView; 
     // Game logic 
     int points; 
     float enemySpawnTimer; 
