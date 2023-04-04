@@ -12,10 +12,13 @@ private:
     sf::RenderWindow* win; 
     sf::Event evento; 
     sf::VideoMode videoMode; 
-
+    
     void initVar();
     void initWin();  
+    void initEnemies();
 
+    //Game objects
+    sf::RectangleShape enemy; 
 
 public: 
     // constructors / destructors
