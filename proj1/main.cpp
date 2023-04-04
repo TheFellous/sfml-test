@@ -6,7 +6,7 @@ int main ()
     //Init game engine 
     Game play; 
     // Game loop
-    while (play.running())
+    while (play.running() && !play.getEndGame())
     {  
         play.update(); 
         play.render(); 

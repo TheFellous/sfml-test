@@ -36,6 +36,9 @@ void Game::initVar()
     this->enemySpawnTimerMax = 100.f; 
     this->enemySpawnTimer = this->enemySpawnTimerMax; 
     this->maxEnemies = 5; 
+    this->mouseHeld = false; 
+    this->health = 10; 
+    this->endgame = false; 
 }
 void Game::initWin()
 {
@@ -70,12 +73,16 @@ void Game::pollEvents()
         }
     }  
 }
-
 void Game::update()
 {
     this->pollEvents(); 
+    if(!this->endgame)
+    {
     this->updateMousePos(); 
     this->updateEnemies(); 
+    }
+    if(this->health <= 0)
+        this->endgame = true; 
 }
 void Game::updateMousePos()
 {
@@ -94,9 +101,38 @@ void Game::updateEnemies()
             this->enemySpawnTimer += 1.f;
     }
         //moving enemies
-        for(int i = 0; i < this->enemies.size(); i++)
+        for(size_t i = 0; i < this->enemies.size(); i++)
+        {
+            bool deleted = false; 
+
             this->enemies[i].move(0.f, 1.f);
-    
+
+            if(this->enemies[i].getPosition().y > this->win->getSize().y){
+                this->enemies.erase(this->enemies.begin() + i); 
+                this->health -= 1; 
+                std::cout << "Health: " << this->health << "\n"; 
+            }
+
+        }
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        {
+            bool deleted = false; 
+            if(!this->mouseHeld)
+            {
+                this->mouseHeld = true; 
+                for(size_t i = 0; i < this->enemies.size() && deleted == false; i++)    
+                    if(this->enemies[i].getGlobalBounds().contains(this->mousePosView))
+                    {                
+                        deleted = true; 
+                        this->enemies.erase(this->enemies.begin() + i);  
+                        this->points += 1; 
+                        std::cout << "Points: " << this->points << "\n"; 
+                    }
+                
+            }
+        }
+        else 
+            this->mouseHeld = false; 
 }
 void Game::spawnEnemy()
 {   
@@ -116,4 +152,9 @@ void Game::spawnEnemy()
 const bool Game::running() const
 {
     return this->win->isOpen(); 
+}
+
+const bool Game::getEndGame() const
+{
+    return this->endgame;
 }
