@@ -5,6 +5,8 @@ Game::Game()
     this->initVar(); 
     this->initWin(); 
     this->initEnemies(); 
+    this->initFonts(); 
+    this->initTexts();  
 }
 
 Game::~Game()
@@ -19,14 +21,22 @@ void Game::render()
     
     // Draw game objects
     // this->win->draw(this->enemy);   
-    this->renderEnemies(); 
+    this->renderEnemies(*this->win); 
+
+    this->renderText(*this->win); 
 
     this->win->display(); 
 }
-void Game::renderEnemies()
+void Game::renderEnemies(sf::RenderTarget &target)
 {
     for(auto &e : this->enemies)
-        this->win->draw(e);
+        target.draw(e);
+    
+}
+void Game::renderText(sf::RenderTarget &target)
+{
+    target.draw(this->uiText); 
+    
 }
 void Game::initVar()
 {
@@ -57,6 +67,20 @@ void Game::initEnemies()
     this->enemy.setOutlineColor(sf::Color::Green); 
     this->enemy.setOutlineThickness(1.f); 
 }
+void Game::initTexts()
+{
+    this->uiText.setFont(this->font); 
+    this->uiText.setCharacterSize(20); 
+    this->uiText.setFillColor(sf::Color::White); 
+    this->uiText.setString("NONE"); 
+}
+void Game::initFonts()
+{
+    if(!this->font.loadFromFile("../Fonts/Dosis-Light.ttf"))    
+    {
+        std::cout << "Failed to load font" << "\n"; 
+    }
+}
 void Game::pollEvents()
 {
     while(this->win->pollEvent(this->evento))
@@ -80,6 +104,7 @@ void Game::update()
     {
     this->updateMousePos(); 
     this->updateEnemies(); 
+    this->updateText(); 
     }
     if(this->health <= 0)
         this->endgame = true; 
@@ -134,6 +159,13 @@ void Game::updateEnemies()
         else 
             this->mouseHeld = false; 
 }
+void Game::updateText()
+{
+    std::stringstream ss; 
+    ss << "Points: " << this->points << "\n" <<
+    "Health: " << this->health <<"\n";
+    this->uiText.setString(ss.str()); 
+}
 void Game::spawnEnemy()
 {   
     // Set random position, color, add enemy to the vector
@@ -145,15 +177,13 @@ void Game::spawnEnemy()
     this->enemies.push_back(this->enemy); 
 }
 
+
 // FUNCTIONS
-
-
 // Acessors 
 const bool Game::running() const
 {
     return this->win->isOpen(); 
 }
-
 const bool Game::getEndGame() const
 {
     return this->endgame;
